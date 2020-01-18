@@ -29,23 +29,34 @@ public class Dagger implements MqttCallback {
 
         // create options if null
         if (options == null) {
+            options = new Options();
+        }
+
+        // mqtt connection options
+        if (options.getMqttConnectOptions() == null) {
             MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
             mqttConnectOptions.setCleanSession(true);
-
-            // create options
-            options = new Options();
             options.setMqttConnectOptions(mqttConnectOptions);
+        }
+
+        // set client id
+        if (Strings.isEmpty(options.getClientId())) {
+            UUID clientId = UUID.randomUUID();
+            options.setClientId(clientId.toString());
+        }
+
+        // set memory persistance
+        if (options.getMqttClientPersistence() == null) {
+            options.setMqttClientPersistence(new MemoryPersistence());
         }
 
         this.url = url;
         this.options = options;
         this.regexTopics = new HashMap<>();
-
-        MemoryPersistence persistence = new MemoryPersistence();
-        UUID clientId = UUID.randomUUID();
+        this.listeners = new HashMap<>();
 
         try {
-            this.client = new MqttClient(this.url, clientId.toString(), persistence);
+            this.client = new MqttClient(this.url, options.getClientId(), options.getMqttClientPersistence());
         } catch (MqttException e) {
             throw new DaggerException(e.getMessage());
         }
@@ -63,7 +74,6 @@ public class Dagger implements MqttCallback {
         try {
             this.client.connect(this.options.getMqttConnectOptions());
             this.client.setCallback(this);
-            this.client.subscribe("latest:block");
         } catch(MqttException e) {
             throw new DaggerException(e.getMessage());
         }
@@ -77,9 +87,26 @@ public class Dagger implements MqttCallback {
         }
     }
 
+    public boolean isConnected() {
+        return this.client.isConnected();
+    }
+
+    public void reconnect() throws DaggerException {
+        try {
+            this.client.reconnect();
+        } catch (MqttException e) {
+            throw new DaggerException(e.getMessage());
+        }
+    }
+
     @Override
     public void connectionLost(Throwable cause) {
-
+        if (this.options != null) {
+            Callback callback = this.options.getCallback();
+            if (callback != null) {
+                callback.connectionLost(cause);
+            }
+        }
     }
 
     @Override
@@ -182,8 +209,6 @@ public class Dagger implements MqttCallback {
     //
 
     private void onMessage(String topic, MqttMessage message) {
-        String payload = message.getPayload().toString();
-
         // emit any message
         this.emit(MESSAGE, message.getPayload());
 
@@ -202,6 +227,10 @@ public class Dagger implements MqttCallback {
 
     // Get all event listeners
     private List<Listener> getEventListeners(String eventName) {
+        if (this.listeners == null) {
+            this.listeners = new HashMap<>();
+        }
+
         if (!this.listeners.containsKey(eventName)) {
             this.listeners.put(eventName, new ArrayList<>());
         }
