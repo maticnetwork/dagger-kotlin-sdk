@@ -9,7 +9,6 @@ import java.util.*;
 public class Dagger implements MqttCallback {
     public static final String MESSAGE = "message";
 
-
     private String url;
     private Options options;
     private MqttClient client;
@@ -36,6 +35,8 @@ public class Dagger implements MqttCallback {
         if (options.getMqttConnectOptions() == null) {
             MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
             mqttConnectOptions.setCleanSession(true);
+            mqttConnectOptions.setAutomaticReconnect(true);
+            mqttConnectOptions.setConnectionTimeout(120);
             options.setMqttConnectOptions(mqttConnectOptions);
         }
 
@@ -72,9 +73,12 @@ public class Dagger implements MqttCallback {
 
     public void start() throws DaggerException {
         try {
-            this.client.connect(this.options.getMqttConnectOptions());
             this.client.setCallback(this);
-        } catch(MqttException e) {
+            IMqttToken token = this.client.connectWithResult(this.options.getMqttConnectOptions());
+            if (token != null) {
+                token.waitForCompletion();
+            }
+        } catch (MqttException e) {
             throw new DaggerException(e.getMessage());
         }
     }
@@ -82,7 +86,7 @@ public class Dagger implements MqttCallback {
     public void stop() throws DaggerException {
         try {
             this.client.disconnect();
-        } catch(MqttException e) {
+        } catch (MqttException e) {
             throw new DaggerException(e.getMessage());
         }
     }
@@ -132,7 +136,10 @@ public class Dagger implements MqttCallback {
         if (!this.regexTopics.containsKey(mqttRegex.getTopic())) {
             // subscribe events from server using topic
             try {
-                this.client.subscribe(mqttRegex.getTopic());
+                IMqttToken token = this.client.subscribeWithResponse(mqttRegex.getTopic());
+                if (token != null) {
+                    token.waitForCompletion();
+                }
             } catch (MqttException e) {
                 throw new DaggerException(e.getMessage());
             }
@@ -202,7 +209,6 @@ public class Dagger implements MqttCallback {
     public Room of(RoomType roomType) throws DaggerException {
         return new Room(this, roomType);
     }
-
 
     //
     // Private methods
