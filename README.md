@@ -19,7 +19,7 @@ Add the dependency in your app module's build.gradle file:
 
 ```
 dependencies {
-    implementation 'com.github.maticnetwork:dagger-java-sdk:Tag'
+    implementation 'com.github.maticnetwork:dagger-java-sdk:0.0.1'
 }
 ```
 
