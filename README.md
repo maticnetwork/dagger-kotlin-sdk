@@ -26,12 +26,11 @@ dependencies {
 #### Getting Started
 
 ```java
-// Import Matic SDK
+// Import Dagger SDK
 import network.matic.dagger.Dagger;
 import network.matic.dagger.Options;
 import network.matic.dagger.Listener;
 import network.matic.dagger.exceptions.DaggerException;
-
 
 public class Main {
     public static void main(String[] args) throws DaggerException {
