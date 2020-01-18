@@ -20,7 +20,7 @@ public class Main {
         dagger.on("latest:block", new Listener() {
             @Override
             public void Callback(String topic, byte[] data) {
-                System.out.println(topic);
+                System.out.println(new String(data));
             }
         });
 
