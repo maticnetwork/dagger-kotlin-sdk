@@ -4,40 +4,6 @@ import network.matic.dagger.exceptions.DaggerException;
 
 import java.util.regex.Pattern;
 
-enum TokenType {
-    SINGLE, MULTI, RAW;
-}
-
-class Token {
-    private TokenType type;
-    private String name;
-    private String piece;
-    private String last;
-
-    public Token(TokenType type, String name, String piece, String last) {
-        this.type = type;
-        this.name = name;
-        this.piece = piece;
-        this.last = last;
-    }
-
-    public TokenType getType() {
-        return type;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getPiece() {
-        return piece;
-    }
-
-    public String getLast() {
-        return last;
-    }
-}
-
 public class MqttRegex {
     private String topic;
     private String rawTopic;
@@ -82,6 +48,7 @@ public class MqttRegex {
             for (int i = 4; i < tokens.length; i++) {
                 if (!tokens[i].equals("+") && !tokens[i].equals("#")) {
                     tokens[i] = Numeric.toStringPadded(tokens[i], 64);
+                    System.out.println("then is "+tokens[i]);
                 }
             }
         }
