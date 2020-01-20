@@ -1,0 +1,7 @@
+ext {
+    JUNIT_VERSION = "4.12"
+    MOCKITO_VERSION = "2.7.22"
+    PAHO_MQTT_VERSION = "1.2.1"
+    FASTER_XML_VERSION = "3.1.4"
+    GSON_VERSION = "2.8.6"
+}
