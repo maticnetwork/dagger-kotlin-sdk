@@ -41,8 +41,8 @@ public class Main {
                 System.out.println("Connection lost. Reason: " +  cause);
             }
         });
-        
-        Dagger dagger = new Dagger("tcp://localhost:1883", options);
+
+        Dagger dagger = new Dagger("tcp://ropsten.dagger.matic.network", options);
         dagger.start();
         dagger.on("latest:block", new Listener() {
             @Override
@@ -50,7 +50,7 @@ public class Main {
                 System.out.println(data);
             }
         });
-    
+
         // Wait and keep listening dagger events
         synchronized (dagger) {
             while(true) {
