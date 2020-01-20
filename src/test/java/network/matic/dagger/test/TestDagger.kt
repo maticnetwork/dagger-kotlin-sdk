@@ -4,17 +4,12 @@ import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertTrue
 import network.matic.dagger.Dagger
 import network.matic.dagger.Options
-import org.eclipse.paho.client.mqttv3.MqttException
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
-import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
-import java.util.*
 import java.util.UUID.randomUUID
 
 @RunWith(MockitoJUnitRunner::class)
@@ -24,7 +19,7 @@ class TestDagger {
     lateinit var mockedOptions: Options
     private lateinit var mockedDaggerInitializedWithUrlOnly: Dagger
     private lateinit var mockedDagger: Dagger
-    private val url = "tcp://mainnet.dagger.matic.network:1884"
+    private val url = "tcp://ropsten.dagger.matic.network"
     private val clientId = randomUUID().toString()
 
     @Before
@@ -33,7 +28,6 @@ class TestDagger {
 
         mockedDaggerInitializedWithUrlOnly = Dagger(url)
         mockedDagger = Dagger(url, mockedOptions)
-
     }
 
     @Test
@@ -57,11 +51,5 @@ class TestDagger {
         }
         assertTrue(options.clientId.isNotBlank())
         assertTrue(options.mqttClientPersistence != null)
-    }
-
-    @Test
-    @Throws(MqttException::class)
-    fun `should connect client and wait for completion on start call success`() {
-
     }
 }
