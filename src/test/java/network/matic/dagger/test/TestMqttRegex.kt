@@ -118,19 +118,12 @@ class TestMqttRegex {
             val tokens = MqttRegex.tokanize(t.topic)
             for (index in tokens.indices) {
                 val token = tokens[index]
-                val last = index == tokens.size - 1
-                if (token == null || "" == token.trim { it <= ' ' }) {
-                    throw DaggerException("Topic must not be empty in pattern path.")
-                }
                 val cleanToken: String = token.trim { it <= ' ' }
                 val expectedToken = when {
                     cleanToken[0] == '+' -> {
                         Token(SINGLE, "", "([^/#+]+/)", "([^/#+]+/?)")
                     }
                     cleanToken[0] == '#' -> {
-                        if (!last) {
-                            throw DaggerException("# wildcard must be at the end of the pattern")
-                        }
                         Token(MULTI, "#", "((?:[^/#+]+/)*)", "((?:[^/#+]+/?)*)")
                     }
                     else -> {
