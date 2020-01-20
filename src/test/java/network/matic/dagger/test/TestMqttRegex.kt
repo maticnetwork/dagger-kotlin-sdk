@@ -1,8 +1,6 @@
 package network.matic.dagger.test
 
 import com.google.gson.Gson
-import network.matic.dagger.EnumHolder
-import network.matic.dagger.EnumHolder.TokenType
 import network.matic.dagger.EnumHolder.TokenType.*
 import network.matic.dagger.MqttRegex
 import network.matic.dagger.Token
