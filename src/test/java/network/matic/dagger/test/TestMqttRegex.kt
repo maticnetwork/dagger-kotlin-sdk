@@ -63,7 +63,7 @@ class TestMqttRegex {
             // check tokens
             Assert.assertArrayEquals(MqttRegex.tokanize(t.topic), t.tokens)
             // check matches
-            t.matches.forEach { (key: String?, value: Boolean) -> Assert.assertEquals(String.format("Topic `%s` should%swith match with `%s`", key, if (value) " not " else " ", t.topic), mqttRegex.matches(key), value) }
+            t.matches.forEach { (key: String?, value: Boolean) -> assertEquals(String.format("Topic `%s` should%swith match with `%s`", key, if (value) " not " else " ", t.topic), mqttRegex.matches(key), value) }
         }
     }
 
