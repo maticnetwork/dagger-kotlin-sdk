@@ -1,6 +1,9 @@
 package network.matic.dagger.test
 
 import com.google.gson.Gson
+import network.matic.dagger.EnumHolder
+import network.matic.dagger.EnumHolder.TokenType
+import network.matic.dagger.EnumHolder.TokenType.*
 import network.matic.dagger.MqttRegex
 import network.matic.dagger.Token
 import network.matic.dagger.exceptions.DaggerException
@@ -15,6 +18,7 @@ import java.io.FileReader
 data class Topic(
         val topic: String,
         val tokens: Array<String>,
+        val regex: String,
         val matches: Map<String, Boolean>
 ) {
     override fun equals(other: Any?): Boolean {
@@ -25,6 +29,7 @@ data class Topic(
 
         if (topic != other.topic) return false
         if (!tokens.contentEquals(other.tokens)) return false
+        if (regex != other.regex) return false
         if (matches != other.matches) return false
 
         return true
@@ -34,6 +39,7 @@ data class Topic(
         var result = topic.hashCode()
         result = 31 * result + tokens.contentHashCode()
         result = 31 * result + matches.hashCode()
+        result = 31 * result + regex.hashCode()
         return result
     }
 }
@@ -63,7 +69,7 @@ class TestMqttRegex {
     }
 
     @Test
-    fun `should return topic on getTopic call success`(){
+    fun `should return topic on getTopic call success`() {
         for (t in topics) {
             val mqttRegex = MqttRegex(t.topic)
             assertEquals(MqttRegex.tokanize(t.topic).joinToString("/"), mqttRegex.topic)
@@ -71,30 +77,71 @@ class TestMqttRegex {
     }
 
     @Test
-    fun `should return raw topic on getRawTopic call success`(){
+    fun `should return raw topic on getRawTopic call success`() {
         for (t in topics) {
             val mqttRegex = MqttRegex(t.topic)
             assertEquals(t.topic.toLowerCase(), mqttRegex.rawTopic)
         }
     }
 
-//    @Test
-//    fun `should return regex on getRegexp call success`(){
-//        for (t in topics) {
-//            val mqttRegex = MqttRegex(t.topic)
-//            val tokens = MqttRegex.tokanize(t.topic)
-//            val tokenObjects = arrayOfNulls<Token>(topics.size)
-//            for (index in tokens.indices) {
-//                tokenObjects[index] = MqttRegex.processToken(tokens[index], index, tokens)
-//                println("token object ${tokenObjects[index]}")
-//            }
-//            assertEquals(t.topic, MqttRegex.makeRegex(tokenObjects))
-//        }
-//    }
+    @Test
+    fun `should return regex on getRegexp call success`() {
+        for (t in topics) {
+            val mqttRegex = MqttRegex(t.topic)
+            assertEquals(t.regex, mqttRegex.regexp.toString())
+        }
+    }
 
-    @Test fun `should return tokens on tokanize call success`(){
+    @Test
+    fun `should return tokens on tokanize call success`() {
         topics.forEach {
             assertEquals(it.tokens, MqttRegex.tokanize(it.topic))
         }
     }
+
+    @Test
+    @Throws(DaggerException::class)
+    fun `should return regex on makeRegex call success`() {
+        for (t in topics) {
+            val tokens = MqttRegex.tokanize(t.topic)
+            val tokenObjects = arrayOfNulls<Token>(tokens.size)
+            for (index in tokens.indices) {
+                tokenObjects[index] = MqttRegex.processToken(tokens[index], index, tokens)
+                println("token object is ${tokenObjects[index]}")
+            }
+            assertEquals(t.regex, MqttRegex.makeRegex(tokenObjects).toString())
+        }
+    }
+
+    @Test
+    @Throws(DaggerException::class)
+    fun `should return token on processToken call success`() {
+        for (t in topics) {
+            val tokens = MqttRegex.tokanize(t.topic)
+            for (index in tokens.indices) {
+                val token = tokens[index]
+                val last = index == tokens.size - 1
+                if (token == null || "" == token.trim { it <= ' ' }) {
+                    throw DaggerException("Topic must not be empty in pattern path.")
+                }
+                val cleanToken: String = token.trim { it <= ' ' }
+                val expectedToken = when {
+                    cleanToken[0] == '+' -> {
+                        Token(SINGLE, "", "([^/#+]+/)", "([^/#+]+/?)")
+                    }
+                    cleanToken[0] == '#' -> {
+                        if (!last) {
+                            throw DaggerException("# wildcard must be at the end of the pattern")
+                        }
+                        Token(MULTI, "#", "((?:[^/#+]+/)*)", "((?:[^/#+]+/?)*)")
+                    }
+                    else -> {
+                        Token(RAW, cleanToken, String.format("%s/", cleanToken), String.format("%s/?", cleanToken))
+                    }
+                }
+                assertEquals(expectedToken, MqttRegex.processToken(tokens[index], index, tokens))
+            }
+        }
+    }
+
 }

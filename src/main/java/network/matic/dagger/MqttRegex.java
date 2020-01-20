@@ -4,6 +4,8 @@ import network.matic.dagger.exceptions.DaggerException;
 
 import java.util.regex.Pattern;
 
+import static network.matic.dagger.EnumHolder.TokenType.*;
+
 public class MqttRegex {
     private String topic;
     private String rawTopic;
@@ -48,11 +50,9 @@ public class MqttRegex {
             for (int i = 4; i < tokens.length; i++) {
                 if (!tokens[i].equals("+") && !tokens[i].equals("#")) {
                     tokens[i] = Numeric.toStringPadded(tokens[i], 64);
-                    System.out.println("then is "+tokens[i]);
                 }
             }
         }
-
         return tokens;
     }
 
@@ -64,7 +64,7 @@ public class MqttRegex {
         for (int index = 0; index < tokens.length; index++) {
             Token token = tokens[index];
             boolean isLast = index == tokens.length - 1;
-            boolean beforeMulti = index == tokens.length - 2 && lastToken.getType() == TokenType.MULTI;
+            boolean beforeMulti = index == tokens.length - 2 && lastToken.getType() == MULTI;
             result[index] = isLast || beforeMulti ? token.getLast() : token.getPiece();
         }
 
@@ -80,14 +80,14 @@ public class MqttRegex {
 
         String cleanToken = token.trim();
         if (cleanToken.charAt(0) == '+') {
-            return new Token(TokenType.SINGLE, "", "([^/#+]+/)", "([^/#+]+/?)");
+            return new Token(SINGLE, "", "([^/#+]+/)", "([^/#+]+/?)");
         } else if (cleanToken.charAt(0) == '#') {
             if (!last) {
                 throw new DaggerException("# wildcard must be at the end of the pattern");
             }
-            return new Token(TokenType.MULTI, "#", "((?:[^/#+]+/)*)", "((?:[^/#+]+/?)*)");
+            return new Token(MULTI, "#", "((?:[^/#+]+/)*)", "((?:[^/#+]+/?)*)");
         }
 
-        return new Token(TokenType.RAW, cleanToken, String.format("%s/", cleanToken), String.format("%s/?", cleanToken));
+        return new Token(RAW, cleanToken, String.format("%s/", cleanToken), String.format("%s/?", cleanToken));
     }
 }

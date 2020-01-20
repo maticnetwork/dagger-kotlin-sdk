@@ -1,8 +1,7 @@
 package network.matic.dagger.test
 
 import network.matic.dagger.Strings
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Test
 import java.util.UUID.randomUUID
 
@@ -57,15 +56,15 @@ class TestStringUtils {
 
     @Test
     fun `should return n number of zeroes on zeros call success`() {
-        val inputValue = randomUUID().toString()[0]
+        val inputValue = '0'
         val numberOfRepetitions = 5
         val expectedResult = Strings.repeat(inputValue, numberOfRepetitions)
 
-        assertEquals(expectedResult, Strings.repeat(inputValue, numberOfRepetitions))
+        assertEquals(expectedResult, Strings.zeros(numberOfRepetitions))
     }
 
     @Test
-    fun `should return string with repeated characters on repeat call success`(){
+    fun `should return string with repeated characters on repeat call success`() {
         val inputValue = randomUUID().toString()[0]
         val numberOfRepetitions = 5
         val expectedResult = String(CharArray(numberOfRepetitions)).replace('\u0000', inputValue)
@@ -73,11 +72,13 @@ class TestStringUtils {
         assertEquals(expectedResult, Strings.repeat(inputValue, numberOfRepetitions))
     }
 
-    @Test fun `should return true when input is null or empty`(){
+    @Test
+    fun `should return true when input is null or empty on isEmpty call success`() {
         val emptyInput = ""
         val nullInput = null
 
         assertTrue(Strings.isEmpty(emptyInput))
         assertTrue(Strings.isEmpty(nullInput))
+        assertFalse(Strings.isEmpty(randomUUID().toString()))
     }
 }
