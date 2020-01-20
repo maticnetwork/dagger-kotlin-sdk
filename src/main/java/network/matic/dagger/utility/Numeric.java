@@ -1,5 +1,6 @@
-package network.matic.dagger;
+package network.matic.dagger.utility;
 
+import network.matic.dagger.Strings;
 import network.matic.dagger.exceptions.MessageDecodingException;
 import network.matic.dagger.exceptions.MessageEncodingException;
 

@@ -7,6 +7,7 @@ import network.matic.dagger.Token
 import network.matic.dagger.exceptions.DaggerException
 import org.junit.Assert
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Before
 import org.junit.Test
 import java.io.File

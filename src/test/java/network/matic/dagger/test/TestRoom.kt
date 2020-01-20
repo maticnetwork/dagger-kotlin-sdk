@@ -4,15 +4,16 @@ import network.matic.dagger.Dagger
 import network.matic.dagger.Listener
 import network.matic.dagger.Room
 import network.matic.dagger.RoomType
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.verify
+import org.mockito.Mockito.verifyNoMoreInteractions
 import org.mockito.junit.MockitoJUnitRunner
 import java.util.UUID.randomUUID
-
 
 @RunWith(MockitoJUnitRunner::class)
 class TestRoom {
@@ -66,5 +67,10 @@ class TestRoom {
         val resultConfirmedRoom = confirmedRoom.off(eventName, mockedListener)
         verify(mockedDagger).off("${confirmedRoom.roomType}:$eventName", mockedListener)
         assertEquals(confirmedRoom, resultConfirmedRoom)
+    }
+
+    @After
+    fun tearDown() {
+        verifyNoMoreInteractions(mockedDagger, mockedListener)
     }
 }

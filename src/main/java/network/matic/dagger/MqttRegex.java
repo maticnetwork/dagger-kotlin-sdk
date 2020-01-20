@@ -1,6 +1,7 @@
 package network.matic.dagger;
 
 import network.matic.dagger.exceptions.DaggerException;
+import network.matic.dagger.utility.Numeric;
 
 import java.util.regex.Pattern;
 
@@ -67,7 +68,6 @@ public class MqttRegex {
             boolean beforeMulti = index == tokens.length - 2 && lastToken.getType() == MULTI;
             result[index] = isLast || beforeMulti ? token.getLast() : token.getPiece();
         }
-
         return Pattern.compile(String.format("^%s$", String.join("", result)));
     }
 
