@@ -46,21 +46,25 @@ class TestRoom {
     fun `should start dagger when on method is called successfully`() {
         val eventName = randomUUID().toString()
 
-        latestRoom.on(eventName, mockedListener)
+        val resultLatestRoom = latestRoom.on(eventName, mockedListener)
         verify(mockedDagger).on("${latestRoom.roomType}:$eventName", mockedListener)
+        assertEquals(latestRoom, resultLatestRoom)
 
-        confirmedRoom.on(eventName, mockedListener)
+        val resultConfirmedRoom = confirmedRoom.on(eventName, mockedListener)
         verify(mockedDagger).on("${confirmedRoom.roomType}:$eventName", mockedListener)
+        assertEquals(confirmedRoom, resultConfirmedRoom)
     }
 
     @Test
     fun `should stop dagger when off method is called successfully`() {
         val eventName = randomUUID().toString()
 
-        latestRoom.off(eventName, mockedListener)
+        val resultLatestRoom = latestRoom.off(eventName, mockedListener)
         verify(mockedDagger).off("${latestRoom.roomType}:$eventName", mockedListener)
+        assertEquals(latestRoom, resultLatestRoom)
 
-        confirmedRoom.off(eventName, mockedListener)
+        val resultConfirmedRoom = confirmedRoom.off(eventName, mockedListener)
         verify(mockedDagger).off("${confirmedRoom.roomType}:$eventName", mockedListener)
+        assertEquals(confirmedRoom, resultConfirmedRoom)
     }
 }

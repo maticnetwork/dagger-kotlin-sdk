@@ -6,8 +6,8 @@ import org.junit.Test
 
 class TestDagger {
 
-    private lateinit var mockedDagger : Dagger
-
+//    private lateinit var mockedDagger : Dagger
+//
 //    @Before
 //    fun setup(){
 //        mockedDagger = Dagger()

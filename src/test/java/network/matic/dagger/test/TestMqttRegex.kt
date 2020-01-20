@@ -105,7 +105,6 @@ class TestMqttRegex {
             val tokenObjects = arrayOfNulls<Token>(tokens.size)
             for (index in tokens.indices) {
                 tokenObjects[index] = MqttRegex.processToken(tokens[index], index, tokens)
-                println("token object is ${tokenObjects[index]}")
             }
             assertEquals(t.regex, MqttRegex.makeRegex(tokenObjects).toString())
         }
