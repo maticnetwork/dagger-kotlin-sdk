@@ -1,49 +1,96 @@
-[{
-  "topic": "connected",
-  "tokens": ["connected"],
-  "regex" : "^connected/?$",
-  "matches": {
-    "connected": true
+[
+  {
+    "topic": "connected",
+    "tokens": [
+      "connected"
+    ],
+    "processedTokens": [
+      "{\"type\":\"RAW\",\"name\":\"connected\",\"piece\":\"connected/\",\"last\":\"connected/?\"}"
+    ],
+    "regex": "^connected/?$",
+    "matches": {
+      "connected": true
+    }
+  },
+  {
+    "topic": "latest:block.number",
+    "tokens": [
+      "latest:block.number"
+    ],
+    "processedTokens": [
+      "{\"type\":\"RAW\",\"name\":\"latest:block.number\",\"piece\":\"latest:block.number/\",\"last\":\"latest:block.number/?\"}"
+    ],
+    "regex": "^latest:block.number/?$",
+    "matches": {
+      "latest:block.number": true,
+      "latest/block.number": false
+    }
+  },
+  {
+    "topic": "latest:block",
+    "tokens": [
+      "latest:block"
+    ],
+    "processedTokens": [
+      "{\"type\":\"RAW\",\"name\":\"latest:block\",\"piece\":\"latest:block/\",\"last\":\"latest:block/?\"}"
+    ],
+    "regex": "^latest:block/?$",
+    "matches": {
+      "latest:block": true,
+      "latest/block": false
+    }
+  },
+  {
+    "topic": "latest:addr/0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359/tx",
+    "tokens": [
+      "latest:addr",
+      "0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359",
+      "tx"
+    ],
+    "processedTokens": [
+      "{\"type\":\"RAW\",\"name\":\"latest:addr\",\"piece\":\"latest:addr/\",\"last\":\"latest:addr/?\"}",
+      "{\"type\":\"RAW\",\"name\":\"0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359\",\"piece\":\"0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359/\",\"last\":\"0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359/?\"}",
+      "{\"type\":\"RAW\",\"name\":\"tx\",\"piece\":\"tx/\",\"last\":\"tx/?\"}"
+    ],
+    "regex": "^latest:addr/0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359/tx/?$",
+    "matches": {
+      "latest:addr/0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359/tx": true,
+      "latest:addr/any/tx": false
+    }
+  },
+  {
+    "topic": "latest:addr/+/tx",
+    "tokens": [
+      "latest:addr",
+      "+",
+      "tx"
+    ],
+    "processedTokens": ["{\"type\":\"RAW\",\"name\":\"latest:addr\",\"piece\":\"latest:addr/\",\"last\":\"latest:addr/?\"}",
+    "{\"type\":\"SINGLE\",\"name\":\"\",\"piece\":\"([^/#+]+/)\",\"last\":\"([^/#+]+/?)\"}",
+    "{\"type\":\"RAW\",\"name\":\"tx\",\"piece\":\"tx/\",\"last\":\"tx/?\"}"],
+    "regex": "^latest:addr/([^/#+]+/)tx/?$",
+    "matches": {
+      "latest:addr/0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359/tx": true,
+      "latest:addr/0xfb6916095ca1df60bb79ce92ce3ea74c37c5d360/tx": true,
+      "latest:addr/0xfb6916095/tx": true
+    }
+  },
+  {
+    "topic": "latest:log/+/filter/#",
+    "tokens": [
+      "latest:log",
+      "+",
+      "filter",
+      "#"
+    ],
+    "processedTokens": ["{\"type\":\"RAW\",\"name\":\"latest:log\",\"piece\":\"latest:log/\",\"last\":\"latest:log/?\"}",
+    "{\"type\":\"SINGLE\",\"name\":\"\",\"piece\":\"([^/#+]+/)\",\"last\":\"([^/#+]+/?)\"}",
+    "{\"type\":\"RAW\",\"name\":\"filter\",\"piece\":\"filter/\",\"last\":\"filter/?\"}",
+    "{\"type\":\"MULTI\",\"name\":\"#\",\"piece\":\"((?:[^/#+]+/)*)\",\"last\":\"((?:[^/#+]+/?)*)\"}"],
+    "regex": "^latest:log/([^/#+]+/)filter/?((?:[^/#+]+/?)*)$",
+    "matches": {
+      "latest:log/0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359/filter/0x12345": true,
+      "latest:log/0xfb6916095ca1df60bb79ce92ce3ea74c37c5d360/filter/0x12345/0x123456": true
+    }
   }
-}, {
-  "topic": "latest:block.number",
-  "tokens": ["latest:block.number"],
-  "regex" : "^latest:block.number/?$",
-  "matches": {
-    "latest:block.number": true,
-    "latest/block.number": false
-  }
-}, {
-  "topic": "latest:block",
-  "tokens": ["latest:block"],
-  "regex" : "^latest:block/?$",
-  "matches": {
-    "latest:block": true,
-    "latest/block": false
-  }
-}, {
-  "topic": "latest:addr/0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359/tx",
-  "tokens": ["latest:addr", "0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359", "tx"],
-  "regex" : "^latest:addr/0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359/tx/?$",
-  "matches": {
-    "latest:addr/0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359/tx": true,
-    "latest:addr/any/tx": false
-  }
-}, {
-  "topic": "latest:addr/+/tx",
-  "tokens": ["latest:addr", "+", "tx"],
-  "regex" : "^latest:addr/([^/#+]+/)tx/?$",
-  "matches": {
-    "latest:addr/0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359/tx": true,
-    "latest:addr/0xfb6916095ca1df60bb79ce92ce3ea74c37c5d360/tx": true,
-    "latest:addr/0xfb6916095/tx": true
-  }
-}, {
-  "topic": "latest:log/+/filter/#",
-  "tokens": ["latest:log", "+", "filter", "#"],
-  "regex" : "^latest:log/([^/#+]+/)filter/?((?:[^/#+]+/?)*)$",
-  "matches": {
-    "latest:log/0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359/filter/0x12345": true,
-    "latest:log/0xfb6916095ca1df60bb79ce92ce3ea74c37c5d360/filter/0x12345/0x123456": true
-  }
-}]
+]

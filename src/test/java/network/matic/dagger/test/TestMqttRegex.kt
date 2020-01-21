@@ -1,13 +1,13 @@
 package network.matic.dagger.test
 
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import network.matic.dagger.EnumHolder.TokenType.*
 import network.matic.dagger.MqttRegex
 import network.matic.dagger.Token
 import network.matic.dagger.exceptions.DaggerException
 import org.junit.Assert
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotEquals
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import java.io.File
@@ -17,6 +17,7 @@ import java.io.FileReader
 data class Topic(
         val topic: String,
         val tokens: Array<String>,
+        val processedTokens: Array<String>,
         val regex: String,
         val matches: Map<String, Boolean>
 ) {
@@ -61,7 +62,7 @@ class TestMqttRegex {
         for (t in topics) {
             val mqttRegex = MqttRegex(t.topic)
             // check tokens
-            Assert.assertArrayEquals(MqttRegex.tokanize(t.topic), t.tokens)
+            assertArrayEquals(MqttRegex.tokanize(t.topic), t.tokens)
             // check matches
             t.matches.forEach { (key: String?, value: Boolean) -> assertEquals(String.format("Topic `%s` should%swith match with `%s`", key, if (value) " not " else " ", t.topic), mqttRegex.matches(key), value) }
         }
@@ -114,23 +115,12 @@ class TestMqttRegex {
     @Test
     @Throws(DaggerException::class)
     fun `should return token on processToken call success`() {
-        for (t in topics) {
-            val tokens = MqttRegex.tokanize(t.topic)
-            for (index in tokens.indices) {
-                val token = tokens[index]
-                val cleanToken: String = token.trim { it <= ' ' }
-                val expectedToken = when {
-                    cleanToken[0] == '+' -> {
-                        Token(SINGLE, "", "([^/#+]+/)", "([^/#+]+/?)")
-                    }
-                    cleanToken[0] == '#' -> {
-                        Token(MULTI, "#", "((?:[^/#+]+/)*)", "((?:[^/#+]+/?)*)")
-                    }
-                    else -> {
-                        Token(RAW, cleanToken, String.format("%s/", cleanToken), String.format("%s/?", cleanToken))
-                    }
+        for (topicIndices in topics.indices) {
+            with(topics[topicIndices]) {
+                for (index in tokens.indices) {
+                    val expectedToken = Gson().fromJson<Token>(processedTokens[index], Token::class.java)
+                    assertEquals(expectedToken, MqttRegex.processToken(tokens[index], index, tokens))
                 }
-                assertEquals(expectedToken, MqttRegex.processToken(tokens[index], index, tokens))
             }
         }
     }

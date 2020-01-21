@@ -68,8 +68,10 @@ class TestStringUtils {
         val inputValue = randomUUID().toString()[0]
         val numberOfRepetitions = 5
         val expectedResult = String(CharArray(numberOfRepetitions)).replace('\u0000', inputValue)
+        val obtainedResult = Strings.repeat(inputValue, numberOfRepetitions)
 
-        assertEquals(expectedResult, Strings.repeat(inputValue, numberOfRepetitions))
+        assertEquals(expectedResult, obtainedResult)
+        assertNotEquals("$expectedResult$inputValue", obtainedResult)
     }
 
     @Test
