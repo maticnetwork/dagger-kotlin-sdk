@@ -4,4 +4,5 @@ ext {
     PAHO_MQTT_VERSION = "1.2.1"
     FASTER_XML_VERSION = "3.1.4"
     GSON_VERSION = "2.8.6"
+    GUICE_VERSION = "4.2.2"
 }

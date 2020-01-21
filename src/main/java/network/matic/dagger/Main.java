@@ -17,7 +17,7 @@ public class Main {
         dagger.start();
         dagger.on("latest:block", new Listener() {
             @Override
-            public void Callback(String topic, byte[] data) {
+            public void callback(String topic, byte[] data) {
                 System.out.println(new String(data));
             }
         });
@@ -27,11 +27,13 @@ public class Main {
                 try {
                     dagger.wait(5000);
                     System.out.println(String.format("Connected: %s, Subscriptions: %s", dagger.isConnected(),
-                            dagger.getSubscriptions()));
+                            dagger.getAllSubscriptions()));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }
+
+
     }
 }

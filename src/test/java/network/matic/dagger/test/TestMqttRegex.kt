@@ -60,35 +60,35 @@ class TestMqttRegex {
     @Throws(DaggerException::class)
     fun `should match raw topic, tokens and complete successfully`() {
         for (t in topics) {
-            val mqttRegex = MqttRegex(t.topic)
+            val mqttregex = MqttRegex(t.topic)
             // check tokens
             assertArrayEquals(MqttRegex.tokanize(t.topic), t.tokens)
             // check matches
-            t.matches.forEach { (key: String?, value: Boolean) -> assertEquals(String.format("Topic `%s` should%swith match with `%s`", key, if (value) " not " else " ", t.topic), mqttRegex.matches(key), value) }
+            t.matches.forEach { (key: String?, value: Boolean) -> assertEquals(String.format("Topic `%s` should%swith match with `%s`", key, if (value) " not " else " ", t.topic), mqttregex.matches(key), value) }
         }
     }
 
     @Test
     fun `should return topic on getTopic call success`() {
         for (t in topics) {
-            val mqttRegex = MqttRegex(t.topic)
-            assertEquals(t.tokens.joinToString("/"), mqttRegex.topic)
+            val MqttRegex = MqttRegex(t.topic)
+            assertEquals(t.tokens.joinToString("/"), MqttRegex.topic)
         }
     }
 
     @Test
     fun `should return raw topic on getRawTopic call success`() {
         for (t in topics) {
-            val mqttRegex = MqttRegex(t.topic)
-            assertEquals(t.topic.toLowerCase(), mqttRegex.rawTopic)
+            val MqttRegex = MqttRegex(t.topic)
+            assertEquals(t.topic.toLowerCase(), MqttRegex.rawTopic)
         }
     }
 
     @Test
     fun `should return regex on getRegexp call success`() {
         for (t in topics) {
-            val mqttRegex = MqttRegex(t.topic)
-            assertEquals(t.regex, mqttRegex.regexp.toString())
+            val MqttRegex = MqttRegex(t.topic)
+            assertEquals(t.regex, MqttRegex.regexp.toString())
         }
     }
 
