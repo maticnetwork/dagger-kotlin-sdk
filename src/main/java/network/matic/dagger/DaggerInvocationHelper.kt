@@ -198,15 +198,12 @@ class DaggerInvocationHelperImpl(private val daggerInstance: Dagger,
     private fun onMessage(topic: String, message: MqttMessage) { // emit any message
         emit(Dagger.MESSAGE, message.payload)
         // emit events to matching listeners
-
-//        getMatchingTopics(topic).forEach(Consumer { eventName: String -> emit(eventName, message.payload) })
         getMatchingTopics(topic).forEach {
             emit(it, message.payload)
         }
     }
 
     private fun emit(eventName: String, payload: ByteArray) { // execute callback in all events
-//        getEventListeners(eventName)!!.forEach(Consumer { listener: Listener -> listener.callback(eventName, payload) })
         getEventListeners(eventName).forEach {
             it.callback(eventName, payload)
         }
