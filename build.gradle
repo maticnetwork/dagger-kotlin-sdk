@@ -17,6 +17,7 @@ dependencies {
     implementation "org.eclipse.paho:org.eclipse.paho.client.mqttv3:$PAHO_MQTT_VERSION"
     implementation "com.fasterxml.uuid:java-uuid-generator:$FASTER_XML_VERSION"
     implementation "com.google.code.gson:gson:$GSON_VERSION"
+    implementation "com.google.inject:guice:$GUICE_VERSION"
 
     testImplementation "junit:junit:$JUNIT_VERSION"
     testImplementation "org.mockito:mockito-core:$MOCKITO_VERSION"

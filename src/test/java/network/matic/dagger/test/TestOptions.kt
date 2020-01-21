@@ -21,7 +21,9 @@ class TestOptions {
 
     @Before
     fun setup() {
-        callback = Callback { }
+        callback = object : Callback {
+            override fun connectionLost(cause: Throwable?) {}
+        }
         mqttConnectOptions = MqttConnectOptions()
         mqttClientPersistence = MemoryPersistence()
         testOptions = Options()

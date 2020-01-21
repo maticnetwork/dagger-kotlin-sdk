@@ -11,7 +11,8 @@ import java.util.Arrays;
 public class Numeric {
     private static final String HEX_PREFIX = "0x";
 
-    private Numeric() {}
+    private Numeric() {
+    }
 
     public static String encodeQuantity(BigInteger value) {
         if (value.signum() != -1) {
@@ -71,7 +72,7 @@ public class Numeric {
     }
 
     public static boolean containsHexPrefix(String input) {
-        return !Strings.isEmpty(input)
+        return !Strings.INSTANCE.isEmpty(input)
                 && input.length() > 1
                 && input.charAt(0) == '0'
                 && input.charAt(1) == 'x';
@@ -113,7 +114,7 @@ public class Numeric {
     public static String toHexStringWithPrefixSafe(BigInteger value) {
         String result = toHexStringNoPrefix(value);
         if (result.length() < 2) {
-            result = Strings.zeros(1) + result;
+            result = Strings.INSTANCE.zeros(1) + result;
         }
         return HEX_PREFIX + result;
     }
@@ -134,7 +135,7 @@ public class Numeric {
         }
 
         if (length < size) {
-            result = Strings.zeros(size - length) + result;
+            result = Strings.INSTANCE.zeros(size - length) + result;
         }
 
         if (withPrefix) {
@@ -175,7 +176,7 @@ public class Numeric {
         }
 
         StringBuilder builder = new StringBuilder();
-        builder.append(Strings.repeat('0', length - cleanInput.length()));
+        builder.append(Strings.INSTANCE.repeat('0', length - cleanInput.length()));
         builder.append(cleanInput);
 
         return prependHexPrefix(builder.toString());
@@ -187,7 +188,7 @@ public class Numeric {
         int len = cleanInput.length();
 
         if (len == 0) {
-            return new byte[] {};
+            return new byte[]{};
         }
 
         byte[] data;
