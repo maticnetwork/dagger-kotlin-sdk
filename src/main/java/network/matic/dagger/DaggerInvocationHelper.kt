@@ -34,7 +34,7 @@ class DaggerInvocationHelperImpl(private val daggerInstance: Dagger,
 
     private var client: MqttClient? = null
     private val regexTopics: MutableMap<String, MqttRegex?>
-    private var listeners: MutableMap<String?, List<Listener>?>?
+    private var listeners: MutableMap<String?, MutableList<Listener>?>?
 
     init {
         if (url.isNullOrBlank()) {
@@ -136,7 +136,7 @@ class DaggerInvocationHelperImpl(private val daggerInstance: Dagger,
         }
         val list = getEventListeners(eventName)
         if (listener != null) {
-            list!!.add(listener)
+            list.add(listener)
         }
         return daggerInstance
     }
@@ -145,7 +145,7 @@ class DaggerInvocationHelperImpl(private val daggerInstance: Dagger,
     override fun removeListener(eventName: String, listener: Listener?): Dagger {
         val mqttRegex = instanceHelper.getMqttRegex(eventName)
         // if listener count is zero, unsubscribe topic and delete from `_regexTopics`
-        if (getEventListeners(eventName)?.size == 0) { // unsubscribe events from server
+        if (getEventListeners(eventName).size == 0) { // unsubscribe events from server
             try {
                 client?.unsubscribe(mqttRegex.topic)
             } catch (e: MqttException) {
@@ -178,7 +178,7 @@ class DaggerInvocationHelperImpl(private val daggerInstance: Dagger,
     override fun getMatchingTopics(eventName: String): List<String> {
         val result: MutableList<String> = ArrayList()
         for ((_, mqttRegex) in regexTopics) {
-            if (mqttRegex?.matches(eventName ?: "") == true) {
+            if (mqttRegex!!.matches(eventName)) {
                 result.add(mqttRegex.topic)
             }
         }
@@ -198,22 +198,29 @@ class DaggerInvocationHelperImpl(private val daggerInstance: Dagger,
     private fun onMessage(topic: String, message: MqttMessage) { // emit any message
         emit(Dagger.MESSAGE, message.payload)
         // emit events to matching listeners
-        getMatchingTopics(topic).forEach(Consumer { eventName: String -> emit(eventName, message.payload) })
+
+//        getMatchingTopics(topic).forEach(Consumer { eventName: String -> emit(eventName, message.payload) })
+        getMatchingTopics(topic).forEach {
+            emit(it, message.payload)
+        }
     }
 
     private fun emit(eventName: String, payload: ByteArray) { // execute callback in all events
-        getEventListeners(eventName)!!.forEach(Consumer { listener: Listener -> listener.callback(eventName, payload) })
+//        getEventListeners(eventName)!!.forEach(Consumer { listener: Listener -> listener.callback(eventName, payload) })
+        getEventListeners(eventName).forEach {
+            it.callback(eventName, payload)
+        }
     }
 
     // Get all event listeners
-    private fun getEventListeners(eventName: String?): MutableList<Listener>? {
+    private fun getEventListeners(eventName: String?): MutableList<Listener> {
         if (listeners == null) {
             listeners = HashMap()
         }
         if (!listeners!!.containsKey(eventName)) {
-            listeners!![eventName] = ArrayList()
+            listeners!![eventName] = mutableListOf()
         }
-        return listeners!![eventName]?.toMutableList()
+        return listeners!![eventName]!!
     }
 
 }

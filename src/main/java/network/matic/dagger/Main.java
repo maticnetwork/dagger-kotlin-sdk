@@ -15,10 +15,10 @@ public class Main {
 
         Dagger dagger = new Dagger("tcp://ropsten.dagger.matic.network");
         dagger.start();
-        dagger.on("latest:block", new Listener() {
+        dagger.on("latest:block.number", new Listener() {
             @Override
             public void callback(String topic, byte[] data) {
-                System.out.println(new String(data));
+                System.out.println("latest block number is " + new String(data));
             }
         });
 
