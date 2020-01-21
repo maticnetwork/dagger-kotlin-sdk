@@ -1,42 +1,11 @@
 package network.matic.dagger;
 
 import network.matic.dagger.exceptions.DaggerException;
+import network.matic.dagger.utility.Numeric;
 
 import java.util.regex.Pattern;
 
-enum TokenType {
-    SINGLE, MULTI, RAW;
-}
-
-class Token {
-    private TokenType type;
-    private String name;
-    private String piece;
-    private String last;
-
-    public Token(TokenType type, String name, String piece, String last) {
-        this.type = type;
-        this.name = name;
-        this.piece = piece;
-        this.last = last;
-    }
-
-    public TokenType getType() {
-        return type;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getPiece() {
-        return piece;
-    }
-
-    public String getLast() {
-        return last;
-    }
-}
+import static network.matic.dagger.EnumHolder.TokenType.*;
 
 public class MqttRegex {
     private String topic;
@@ -85,7 +54,6 @@ public class MqttRegex {
                 }
             }
         }
-
         return tokens;
     }
 
@@ -97,10 +65,9 @@ public class MqttRegex {
         for (int index = 0; index < tokens.length; index++) {
             Token token = tokens[index];
             boolean isLast = index == tokens.length - 1;
-            boolean beforeMulti = index == tokens.length - 2 && lastToken.getType() == TokenType.MULTI;
+            boolean beforeMulti = index == tokens.length - 2 && lastToken.getType() == MULTI;
             result[index] = isLast || beforeMulti ? token.getLast() : token.getPiece();
         }
-
         return Pattern.compile(String.format("^%s$", String.join("", result)));
     }
 
@@ -113,14 +80,14 @@ public class MqttRegex {
 
         String cleanToken = token.trim();
         if (cleanToken.charAt(0) == '+') {
-            return new Token(TokenType.SINGLE, "", "([^/#+]+/)", "([^/#+]+/?)");
+            return new Token(SINGLE, "", "([^/#+]+/)", "([^/#+]+/?)");
         } else if (cleanToken.charAt(0) == '#') {
             if (!last) {
                 throw new DaggerException("# wildcard must be at the end of the pattern");
             }
-            return new Token(TokenType.MULTI, "#", "((?:[^/#+]+/)*)", "((?:[^/#+]+/?)*)");
+            return new Token(MULTI, "#", "((?:[^/#+]+/)*)", "((?:[^/#+]+/?)*)");
         }
 
-        return new Token(TokenType.RAW, cleanToken, String.format("%s/", cleanToken), String.format("%s/?", cleanToken));
+        return new Token(RAW, cleanToken, String.format("%s/", cleanToken), String.format("%s/?", cleanToken));
     }
 }

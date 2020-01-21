@@ -1,20 +1,35 @@
 plugins {
     id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.61'
 }
 
-group 'org.example'
-version '1.0-SNAPSHOT'
+apply from: 'versions.gradle'
 
 sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation "org.eclipse.paho:org.eclipse.paho.client.mqttv3:$PAHO_MQTT_VERSION"
+    implementation "com.fasterxml.uuid:java-uuid-generator:$FASTER_XML_VERSION"
+    implementation "com.google.code.gson:gson:$GSON_VERSION"
 
-    compile "org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.1"
-    compile "com.fasterxml.uuid:java-uuid-generator:3.1.4"
-    compile "com.google.code.gson:gson:2.8.6"
+    testImplementation "junit:junit:$JUNIT_VERSION"
+    testImplementation "org.mockito:mockito-core:$MOCKITO_VERSION"
+}
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
