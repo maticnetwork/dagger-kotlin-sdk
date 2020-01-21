@@ -30,10 +30,7 @@ interface DaggerInvocationHelper {
 class DaggerInvocationHelperImpl(private val daggerInstance: Dagger,
                                  private val url: String?,
                                  private var options: Options = Options(),
-                                 private var mqttOptionsHelper: MqttOptionsHelper,
-                                 private var mqttClientPersistenceHelper: MqttClientPersistenceHelper,
-                                 private var mqttClientHelper: MqttClientHelper,
-                                 private var mqttRegexHelper: MqttRegexHelper) : DaggerInvocationHelper {
+                                 private var instanceHelper: InstanceHelper) : DaggerInvocationHelper {
 
     private var client: MqttClient? = null
     private val regexTopics: MutableMap<String, MqttRegex?>
@@ -45,7 +42,7 @@ class DaggerInvocationHelperImpl(private val daggerInstance: Dagger,
         }
         // mqtt connection options
         if (options.mqttConnectOptions == null) {
-            val mqttConnectOptions = mqttOptionsHelper.getNewConnectionOptionsInstance()
+            val mqttConnectOptions = instanceHelper.getNewConnectionOptions()
             mqttConnectOptions.isCleanSession = true
             mqttConnectOptions.isAutomaticReconnect = true
             mqttConnectOptions.connectionTimeout = 120
@@ -58,12 +55,12 @@ class DaggerInvocationHelperImpl(private val daggerInstance: Dagger,
         }
         // set memory persistance
         if (options.mqttClientPersistence == null) {
-            options.mqttClientPersistence = mqttClientPersistenceHelper.getMemoryPersistenceInstance()
+            options.mqttClientPersistence = instanceHelper.getMemoryPersistence()
         }
         regexTopics = HashMap()
         listeners = HashMap()
         try {
-            client = mqttClientHelper.getMqttClient(this.url, options.clientId!!, options.mqttClientPersistence!!)
+            client = instanceHelper.getMqttClient(this.url, options.clientId!!, options.mqttClientPersistence!!)
         } catch (e: MqttException) {
             throw DaggerException(e.message)
         }
@@ -126,7 +123,7 @@ class DaggerInvocationHelperImpl(private val daggerInstance: Dagger,
 
     @Throws(DaggerException::class)
     override fun addListener(eventName: String, listener: Listener?): Dagger {
-        val mqttRegex = mqttRegexHelper.getInstance(eventName)
+        val mqttRegex = instanceHelper.getMqttRegex(eventName)
         if (!regexTopics.containsKey(mqttRegex.topic)) { // subscribe events from server using topic
             try {
                 val token = client?.subscribeWithResponse(mqttRegex.topic)
@@ -146,7 +143,7 @@ class DaggerInvocationHelperImpl(private val daggerInstance: Dagger,
 
     @Throws(DaggerException::class)
     override fun removeListener(eventName: String, listener: Listener?): Dagger {
-        val mqttRegex = MqttRegex(eventName)
+        val mqttRegex = instanceHelper.getMqttRegex(eventName)
         // if listener count is zero, unsubscribe topic and delete from `_regexTopics`
         if (getEventListeners(eventName)?.size == 0) { // unsubscribe events from server
             try {
@@ -166,7 +163,7 @@ class DaggerInvocationHelperImpl(private val daggerInstance: Dagger,
 
     @Throws(DaggerException::class)
     override fun removeAllListeners(eventName: String) {
-        val mqttRegex = mqttRegexHelper.getInstance(eventName)
+        val mqttRegex = instanceHelper.getMqttRegex(eventName)
         try {
             client!!.unsubscribe(mqttRegex.topic)
         } catch (e: MqttException) {

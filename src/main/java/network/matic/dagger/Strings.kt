@@ -6,7 +6,7 @@ object Strings {
     }
 
     fun capitaliseFirstLetter(string: String?): String? {
-        return if (string == null || string.length == 0) {
+        return if (string == null || string.isEmpty()) {
             string
         } else {
             string.substring(0, 1).toUpperCase() + string.substring(1)
@@ -14,7 +14,7 @@ object Strings {
     }
 
     fun lowercaseFirstLetter(string: String?): String? {
-        return if (string == null || string.length == 0) {
+        return if (string == null || string.isEmpty()) {
             string
         } else {
             string.substring(0, 1).toLowerCase() + string.substring(1)
@@ -30,6 +30,6 @@ object Strings {
     }
 
     fun isEmpty(s: String?): Boolean {
-        return s == null || s.length == 0
+        return s == null || s.isEmpty()
     }
 }
