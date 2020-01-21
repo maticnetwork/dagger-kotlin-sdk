@@ -72,7 +72,7 @@ class TestMqttRegex {
     fun `should return topic on getTopic call success`() {
         for (t in topics) {
             val mqttRegex = MqttRegex(t.topic)
-            assertEquals(MqttRegex.tokanize(t.topic).joinToString("/"), mqttRegex.topic)
+            assertEquals(t.tokens.joinToString("/"), mqttRegex.topic)
         }
     }
 
