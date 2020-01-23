@@ -22,15 +22,15 @@ open class MqttRegex(internal val t: String) {
         regexp = makeRegex(tokenObjects)
     }
 
-    fun matches(rawTopic: String): Boolean {
+    open fun matches(rawTopic: String): Boolean {
         val topic = rawTopic.toLowerCase()
         return regexp.matcher(topic).matches()
     }
 
     companion object {
 
-        fun tokanize(topic: String): Array<String> {
-            var topic = topic
+        fun tokanize(topicArg: String): Array<String> {
+            var topic = topicArg
             topic = topic.toLowerCase()
             val tokens = topic.split("/").toTypedArray()
             if (tokens.size >= 4 && tokens[0].contains(":log")) {

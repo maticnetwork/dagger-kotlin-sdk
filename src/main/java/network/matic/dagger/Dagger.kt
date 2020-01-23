@@ -6,7 +6,7 @@ import network.matic.dagger.exceptions.DaggerException
 import org.eclipse.paho.client.mqttv3.*
 
 open class Dagger @JvmOverloads constructor(internal val url: String?,
-                                            internal var options: Options = Options()) : MqttCallback {
+                                            internal var options: Options? = null) : MqttCallback {
 
     private val injector: Injector = Guice.createInjector(DependencyInjector())
     private var instanceHelper: InstanceHelper
@@ -14,7 +14,7 @@ open class Dagger @JvmOverloads constructor(internal val url: String?,
 
     init {
         instanceHelper = injector.getInstance(InstanceHelper::class.java)
-        daggerInvocationHelper = DaggerInvocationHelperImpl(this, url, options, instanceHelper)
+        daggerInvocationHelper = instanceHelper.getDaggerInvocationHelper(this, url, instanceHelper, options)
     }
 
     override fun connectionLost(cause: Throwable) {
