@@ -54,7 +54,7 @@ object Main {
             while (true) {
                 try {
                     Thread.sleep(5000)
-                    println(java.lang.String.format("Connected: %s, Subscriptions: %s", dagger.isConnected(), dagger.getAllSubscriptions()))
+                    println("Connected: ${dagger.isConnected()}, Subscriptions: ${dagger.getAllSubscriptions()}")
                 } catch (e: InterruptedException) {
                     e.printStackTrace()
                 }
