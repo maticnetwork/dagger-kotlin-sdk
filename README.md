@@ -1,6 +1,6 @@
-# Dagger Java SDK
+# Dagger Kotlin SDK
 
-Dagger client for Java
+Dagger client for Kotlin
 
 #### Installation
 
