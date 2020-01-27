@@ -1,33 +1,5 @@
-# Dagger Kotlin SDK
+package network.matic.dagger
 
-Dagger client for Kotlin
-
-#### Installation
-
-Add Jitpack to your project level build.gradle file
-
-```
-allprojects {
-	repositories {
-		...
-		maven { url 'https://jitpack.io' }
-	}
-}
-```
-
-Add the dependency in your app module's build.gradle file:
-
-[![](https://jitpack.io/v/maticnetwork/dagger-java-sdk.svg)](https://jitpack.io/#maticnetwork/dagger-java-sdk)
-
-```
-dependencies {
-    implementation "com.github.maticnetwork:dagger-java-sdk:$latest_version"
-}
-```
-
-#### Getting Started
-
-```
 import network.matic.dagger.exceptions.DaggerException
 
 object Main {
@@ -62,4 +34,3 @@ object Main {
         }
     }
 }
-```
