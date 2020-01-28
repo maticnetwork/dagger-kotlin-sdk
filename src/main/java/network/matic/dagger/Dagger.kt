@@ -8,12 +8,11 @@ import org.eclipse.paho.client.mqttv3.*
 open class Dagger @JvmOverloads constructor(internal val url: String?,
                                             internal var options: Options? = null) : MqttCallback {
 
-    private val injector: Injector = Guice.createInjector(DependencyInjector())
     private var instanceHelper: InstanceHelper
     private var daggerInvocationHelper: DaggerInvocationHelper
 
     init {
-        instanceHelper = injector.getInstance(InstanceHelper::class.java)
+        instanceHelper = InstanceHelperImpl()
         daggerInvocationHelper = instanceHelper.getDaggerInvocationHelper(this, url, instanceHelper, options)
     }
 
