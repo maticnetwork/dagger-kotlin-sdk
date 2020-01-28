@@ -1,7 +1,5 @@
 package network.matic.dagger
 
-import com.google.inject.Guice
-import com.google.inject.Injector
 import network.matic.dagger.exceptions.DaggerException
 import org.eclipse.paho.client.mqttv3.*
 
