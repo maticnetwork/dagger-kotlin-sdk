@@ -12,12 +12,12 @@ object Main {
                 println("Connection lost. Reason: $cause")
             }
         }
-        val dagger = Dagger("tcp://ropsten.dagger.matic.network", options)
+        val dagger = Dagger("tcp://ropsten.dagger.matic.network")
         dagger.start()
         dagger.on("latest:block", object : Listener {
             override fun callback(topic: String?, data: ByteArray?) {
                 if (data != null) {
-                    println(String(data))
+                    println("latest block data is ${String(data)}")
                 }
             }
         })

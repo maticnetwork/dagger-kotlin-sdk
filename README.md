@@ -17,11 +17,11 @@ allprojects {
 
 Add the dependency in your app module's build.gradle file:
 
-[![](https://jitpack.io/v/maticnetwork/dagger-java-sdk.svg)](https://jitpack.io/#maticnetwork/dagger-java-sdk)
+[![](https://jitpack.io/v/maticnetwork/dagger-kotlin-sdk.svg)](https://jitpack.io/#maticnetwork/dagger-kotlin-sdk)
 
 ```
 dependencies {
-    implementation "com.github.maticnetwork:dagger-java-sdk:$latest_version"
+    implementation "com.github.maticnetwork:dagger-kotlin-sdk:latest_version"
 }
 ```
 
