@@ -1,7 +1,7 @@
 package network.matic.dagger
 
 object Strings {
-    fun join(src: List<String>?, delimiter: String?): String? {
+    fun join(src: List<String?>?, delimiter: String?): String? {
         return if (src == null) null else {
             val builder = StringBuilder()
             var i = 0

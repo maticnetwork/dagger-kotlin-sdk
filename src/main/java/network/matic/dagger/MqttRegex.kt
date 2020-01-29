@@ -13,7 +13,7 @@ open class MqttRegex(internal val t: String) {
     init {
         val topic = t.toLowerCase()
         val tokens: Array<String> = tokanize(topic)
-        this.topic = java.lang.String.join("/", *tokens)
+        this.topic = Strings.join(tokens.asList(), "/")!!
         rawTopic = topic
         val tokenObjects = arrayOfNulls<Token>(tokens.size)
         for (index in tokens.indices) {
@@ -52,7 +52,7 @@ open class MqttRegex(internal val t: String) {
                 val beforeMulti = index == tokens.size - 2 && lastToken?.type === EnumHolder.TokenType.MULTI
                 result[index] = if (isLast || beforeMulti) token?.last else token?.piece
             }
-            return Pattern.compile(String.format("^%s$", java.lang.String.join("", *result)))
+            return Pattern.compile(String.format("^%s$", Strings.join(result.asList(), "")))
         }
 
         @Throws(DaggerException::class)
