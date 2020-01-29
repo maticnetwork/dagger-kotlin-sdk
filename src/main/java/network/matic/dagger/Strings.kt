@@ -2,7 +2,17 @@ package network.matic.dagger
 
 object Strings {
     fun join(src: List<String>?, delimiter: String?): String? {
-        return if (src == null) null else java.lang.String.join(delimiter, *src.toTypedArray())
+        return if (src == null) null else {
+            val builder = StringBuilder()
+            var i = 0
+            val length = src.size
+            while (i < length) {
+                if (i > 0) builder.append(delimiter)
+                builder.append(src[i])
+                i++
+            }
+            builder.toString()
+        }
     }
 
     fun capitaliseFirstLetter(string: String?): String? {
