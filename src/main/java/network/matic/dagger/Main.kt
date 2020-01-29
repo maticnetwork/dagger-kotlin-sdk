@@ -12,6 +12,7 @@ object Main {
                 println("Connection lost. Reason: $cause")
             }
         }
+
         val dagger = Dagger("tcp://ropsten.dagger.matic.network")
         dagger.start()
         dagger.on("latest:block", object : Listener {
