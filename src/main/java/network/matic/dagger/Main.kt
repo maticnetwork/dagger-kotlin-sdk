@@ -1,33 +1,5 @@
-# Dagger Kotlin SDK
+package network.matic.dagger
 
-Dagger client for Kotlin
-
-#### Installation
-
-Add Jitpack to your project level build.gradle file
-
-```
-allprojects {
-	repositories {
-		...
-		maven { url 'https://jitpack.io' }
-	}
-}
-```
-
-Add the dependency in your app module's build.gradle file:
-
-[![](https://jitpack.io/v/maticnetwork/dagger-kotlin-sdk.svg)](https://jitpack.io/#maticnetwork/dagger-kotlin-sdk)
-
-```
-dependencies {
-    implementation "com.github.maticnetwork:dagger-kotlin-sdk:latest_version"
-}
-```
-
-#### Getting Started
-
-```
 import network.matic.dagger.exceptions.DaggerException
 
 object Main {
@@ -40,12 +12,12 @@ object Main {
                 println("Connection lost. Reason: $cause")
             }
         }
-        val dagger = Dagger("tcp://ropsten.dagger.matic.network", options)
+        val dagger = Dagger("tcp://ropsten.dagger.matic.network")
         dagger.start()
         dagger.on("latest:block", object : Listener {
             override fun callback(topic: String?, data: ByteArray?) {
                 if (data != null) {
-                    println(String(data))
+                    println("latest block data is ${String(data)}")
                 }
             }
         })
@@ -62,4 +34,3 @@ object Main {
         }
     }
 }
-```
