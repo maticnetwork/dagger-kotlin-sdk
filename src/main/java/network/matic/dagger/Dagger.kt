@@ -27,41 +27,41 @@ open class Dagger @JvmOverloads constructor(internal val url: String?,
         daggerInvocationHelper.deliveryComplete(token)
     }
 
-    fun start() {
+    open fun start() {
         daggerInvocationHelper.start()
     }
 
-    fun stop() {
+    open fun stop() {
         daggerInvocationHelper.stop()
     }
 
-    fun isConnected() = daggerInvocationHelper.isConnected()
+    open fun isConnected() = daggerInvocationHelper.isConnected()
 
-    fun reconnect() {
+    open fun reconnect() {
         daggerInvocationHelper.reconnect()
     }
 
     @Throws(DaggerException::class)
-    fun on(eventName: String, listener: Listener?): Dagger = daggerInvocationHelper.on(eventName, listener)
+    open fun on(eventName: String, listener: Listener?): Dagger = daggerInvocationHelper.on(eventName, listener)
 
     @Throws(DaggerException::class)
-    fun off(eventName: String, listener: Listener?): Dagger = daggerInvocationHelper.off(eventName, listener)
+    open fun off(eventName: String, listener: Listener?): Dagger = daggerInvocationHelper.off(eventName, listener)
 
     @Throws(DaggerException::class)
-    fun addListener(eventName: String, listener: Listener?): Dagger = daggerInvocationHelper.addListener(eventName, listener)
+    open fun addListener(eventName: String, listener: Listener?): Dagger = daggerInvocationHelper.addListener(eventName, listener)
 
     @Throws(DaggerException::class)
-    fun removeListener(eventName: String, listener: Listener?): Dagger = daggerInvocationHelper.removeListener(eventName, listener)
+    open fun removeListener(eventName: String, listener: Listener?): Dagger = daggerInvocationHelper.removeListener(eventName, listener)
 
     @Throws(DaggerException::class)
-    fun removeAllListeners(eventName: String) = daggerInvocationHelper.removeAllListeners(eventName)
+    open fun removeAllListeners(eventName: String) = daggerInvocationHelper.removeAllListeners(eventName)
 
-    fun getMatchingTopics(eventName: String): List<String> = daggerInvocationHelper.getMatchingTopics(eventName)
+    open fun getMatchingTopics(eventName: String): List<String> = daggerInvocationHelper.getMatchingTopics(eventName)
 
-    fun getAllSubscriptions(): MutableSet<String> = daggerInvocationHelper.getAllSubscriptions()
+    open fun getAllSubscriptions(): MutableSet<String> = daggerInvocationHelper.getAllSubscriptions()
 
     @Throws(DaggerException::class)
-    fun of(roomType: RoomType?): Room = daggerInvocationHelper.of(roomType)
+    open fun of(roomType: RoomType?): Room = daggerInvocationHelper.of(roomType)
 
     companion object {
         const val MESSAGE = "message"
