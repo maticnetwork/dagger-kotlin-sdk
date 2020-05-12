@@ -3,7 +3,7 @@ package network.matic.dagger
 import network.matic.dagger.exceptions.DaggerException
 import org.eclipse.paho.client.mqttv3.*
 
-open class Dagger @JvmOverloads constructor(internal val url: String?,
+open class Dagger @JvmOverloads constructor(internal val url: String? = null,
                                             internal var options: Options? = null) : MqttCallback {
 
     private var instanceHelper: InstanceHelper
